@@ -19,7 +19,13 @@
   "devDependencies": {
     "nodemon": "^3.0.1"
   },
-  "keywords": ["portfolio", "blog", "api", "express", "mongodb"],
+  "keywords": [
+    "portfolio",
+    "blog",
+    "api",
+    "express",
+    "mongodb"
+  ],
   "author": "",
   "license": "MIT"
 }

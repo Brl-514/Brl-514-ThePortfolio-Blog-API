@@ -10,27 +10,28 @@ dotenv.config();
 // Create Express application
 const app = express();
 
-// Configure CORS
+// 定义CORS白名单
 const allowedOrigins = [
-  'https://portfolio-front-end-indol.vercel.app',
-  'http://localhost:3000'
+  'https://portfolio-front-end-indol.vercel.app', // Vercel生产环境
+  'http://localhost:3000' // 本地开发环境
 ];
 
+// 配置CORS选项
 const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
+  origin: function(origin, callback) {
+    // 检查请求的来源是否在白名单中
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true // Allow cookies and authentication headers
+  credentials: true
 };
 
-// Set up middleware
-app.use(helmet()); // Security headers
-app.use(cors(corsOptions)); // Cross-Origin Resource Sharing with custom options
+// 配置中间件 - 确保CORS在所有路由和express.json()之前
+app.use(helmet()); // 安全头
+app.use(cors(corsOptions)); // 跨域资源共享
 app.use(express.json()); // Parse JSON requests
 
 // Import routes
