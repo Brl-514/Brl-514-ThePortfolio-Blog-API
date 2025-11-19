@@ -10,9 +10,27 @@ dotenv.config();
 // Create Express application
 const app = express();
 
+// Configure CORS
+const allowedOrigins = [
+  'https://portfolio-front-end-indol.vercel.app',
+  'http://localhost:3000'
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true // Allow cookies and authentication headers
+};
+
 // Set up middleware
 app.use(helmet()); // Security headers
-app.use(cors()); // Cross-Origin Resource Sharing
+app.use(cors(corsOptions)); // Cross-Origin Resource Sharing with custom options
 app.use(express.json()); // Parse JSON requests
 
 // Import routes
