@@ -101,12 +101,26 @@ const updateBlogPost = async (req, res, next) => {
       });
     }
     
-    // Check if user is the author
-    if (blogPost.author.toString() !== req.user.id) {
+    // More robust ID comparison - handle populated author object
+    const authorId = String(blogPost.author._id || blogPost.author);
+    const userId = String(req.user.id);
+    
+    // Debug logs for ID comparison
+    console.log('Blog author ID (extracted):', authorId);
+    console.log('User ID:', userId);
+    console.log('ID match result:', authorId === userId);
+    
+    // Check if user is the author with more robust string conversion
+    if (authorId !== userId) {
       return res.status(403).json({
         success: false,
         error: 'Not authorized',
-        message: 'You are not authorized to update this blog post'
+        message: 'You are not authorized to update this blog post',
+        details: {
+          blogAuthorId: authorId,
+          currentUserId: userId,
+          match: false
+        }
       });
     }
     
@@ -158,12 +172,26 @@ const deleteBlogPost = async (req, res, next) => {
       });
     }
     
-    // Check if user is the author
-    if (blogPost.author.toString() !== req.user.id) {
+    // More robust ID comparison - handle populated author object
+    const authorId = String(blogPost.author._id || blogPost.author);
+    const userId = String(req.user.id);
+    
+    // Debug logs for ID comparison
+    console.log('Blog author ID (extracted):', authorId);
+    console.log('User ID:', userId);
+    console.log('ID match result:', authorId === userId);
+    
+    // Check if user is the author with more robust string conversion
+    if (authorId !== userId) {
       return res.status(403).json({
         success: false,
         error: 'Not authorized',
-        message: 'You are not authorized to delete this blog post'
+        message: 'You are not authorized to delete this blog post',
+        details: {
+          blogAuthorId: authorId,
+          currentUserId: userId,
+          match: false
+        }
       });
     }
     

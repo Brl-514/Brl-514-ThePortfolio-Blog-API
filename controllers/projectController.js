@@ -84,6 +84,29 @@ const updateProject = async (req, res, next) => {
       });
     }
     
+    // More robust ID comparison - handle populated user object
+    const projectUserId = String(project.user._id || project.user);
+    const currentUserId = String(req.user.id);
+    
+    // Debug logs for ID comparison
+    console.log('Project user ID (extracted):', projectUserId);
+    console.log('Current user ID:', currentUserId);
+    console.log('ID match result:', projectUserId === currentUserId);
+    
+    // Check if user is the project owner with more robust string conversion
+    if (projectUserId !== currentUserId) {
+      return res.status(403).json({
+        success: false,
+        error: 'Not authorized',
+        message: 'You are not authorized to update this project',
+        details: {
+          projectUserId: projectUserId,
+          currentUserId: currentUserId,
+          match: false
+        }
+      });
+    }
+    
     // Update the project with new data
     project = await Project.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -120,6 +143,29 @@ const deleteProject = async (req, res, next) => {
         success: false,
         error: 'Project not found',
         message: `Project with ID ${req.params.id} does not exist`
+      });
+    }
+    
+    // More robust ID comparison - handle populated user object
+    const projectUserId = String(project.user._id || project.user);
+    const currentUserId = String(req.user.id);
+    
+    // Debug logs for ID comparison
+    console.log('Project user ID (extracted):', projectUserId);
+    console.log('Current user ID:', currentUserId);
+    console.log('ID match result:', projectUserId === currentUserId);
+    
+    // Check if user is the project owner with more robust string conversion
+    if (projectUserId !== currentUserId) {
+      return res.status(403).json({
+        success: false,
+        error: 'Not authorized',
+        message: 'You are not authorized to delete this project',
+        details: {
+          projectUserId: projectUserId,
+          currentUserId: currentUserId,
+          match: false
+        }
       });
     }
     
